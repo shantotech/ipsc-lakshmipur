@@ -69,7 +69,7 @@ class HeroSlideForm
                     ->tabs([
                         Tab::make('English')->schema([
                             TextInput::make('eyebrow_en')->label('Small label above the title')->placeholder('Now open in Lakshmipur')->maxLength(80),
-                            Textarea::make('title_en')->label('Title')->rows(2)->maxLength(120)->helperText('Leave empty for a photo-only slide.'),
+                            Textarea::make('title_en')->label('Title')->rows(2)->maxLength(120)->helperText('Leave empty to show the main homepage text over this slide (recommended). Fill in only for a special slide, e.g. an event.'),
                             Textarea::make('text_en')->label('Short text')->rows(2)->maxLength(300),
                             TextInput::make('button_label_en')->label('Button text')->placeholder('Apply now')->maxLength(40),
                         ]),
