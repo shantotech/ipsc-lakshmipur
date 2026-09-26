@@ -1,10 +1,7 @@
 @extends('layouts.app', ['title' => __('Apply Online')])
 
 @php
-    $classOptions = array_combine(
-        ['play', 'nursery', 'kg', 'one', 'two', 'three', 'four', 'five'],
-        [__('Play'), __('Nursery'), __('KG'), __('Class One'), __('Class Two'), __('Class Three'), __('Class Four'), __('Class Five')],
-    );
+    $classOptions = array_map(fn ($label) => __($label), \App\Models\AdmissionApplication::CLASSES);
 @endphp
 
 @section('content')
@@ -15,12 +12,19 @@
             @if (session('status'))
                 <div class="mb-6 flex gap-3 rounded-2xl bg-brand-50 p-5 text-brand-800 ring-1 ring-brand-200" role="status">
                     @include('partials.icon', ['name' => 'check-circle', 'class' => 'size-6 shrink-0'])
-                    <p class="font-medium">{{ session('status') }}</p>
+                    <div>
+                        <p class="font-medium">{{ session('status') }}</p>
+                        @if (session('reference'))
+                            <p class="mt-2">{{ __('Your reference number:') }} <strong class="rounded-md bg-white px-2 py-0.5 font-mono tracking-wide ring-1 ring-brand-200">{{ session('reference') }}</strong></p>
+                            <p class="mt-1 text-sm text-brand-700">{{ __('Please keep this number. Mention it when you call or visit the office.') }}</p>
+                        @endif
+                    </div>
                 </div>
             @endif
 
             <form method="POST" action="{{ route('admission.submit') }}" class="card space-y-10 p-6 sm:p-8">
                 @csrf
+                <div class="hidden" aria-hidden="true"><label>Website <input type="text" name="website" tabindex="-1" autocomplete="off"></label></div>
                 <fieldset>
                     <legend class="flex items-center gap-2 text-xl font-semibold">
                         <span class="grid size-8 place-items-center rounded-lg bg-brand-600 text-sm text-white">{{ \App\Support\Locale::number(1) }}</span>
