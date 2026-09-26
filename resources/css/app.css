@@ -10,8 +10,9 @@
 @custom-variant bn (&:lang(bn));
 
 @theme {
-    --font-sans: 'Hind Siliguri', ui-sans-serif, system-ui, sans-serif;
+    --font-sans: 'Figtree Variable', 'Hind Siliguri', ui-sans-serif, system-ui, sans-serif;
     --font-display: 'Fraunces Variable', 'Hind Siliguri', ui-serif, Georgia, serif;
+    --font-bangla: 'Hind Siliguri', 'Figtree Variable', ui-sans-serif, system-ui, sans-serif;
 
     /* Brand green, from the IPSC logo */
     --color-brand-50: #eef8f1;
@@ -60,6 +61,11 @@
         line-height: 1.7;
     }
 
+    /* Bangla pages use the Bangla font throughout */
+    :lang(bn) body {
+        font-family: var(--font-bangla);
+    }
+
     h1,
     h2,
     h3,
@@ -75,7 +81,8 @@
     :lang(bn) h2,
     :lang(bn) h3,
     :lang(bn) h4 {
-        @apply font-sans font-bold;
+        font-family: var(--font-bangla);
+        @apply font-bold;
         letter-spacing: 0;
         line-height: 1.35;
     }

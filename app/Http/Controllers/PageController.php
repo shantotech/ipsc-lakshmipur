@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Notice;
 use App\Support\DemoContent;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -13,7 +14,7 @@ class PageController extends Controller
     public function home(): View
     {
         return view('pages.home', [
-            'notices' => array_slice(DemoContent::notices(), 0, 3),
+            'notices' => Notice::visible()->latestFirst()->take(3)->get(),
             'events' => DemoContent::events(),
         ]);
     }
@@ -98,21 +99,25 @@ class PageController extends Controller
     public function notices(Request $request): View
     {
         $category = $request->query('category');
-        $notices = collect(DemoContent::notices())
-            ->when($category, fn ($items) => $items->where('category', $category))
-            ->sortByDesc(fn ($n) => [$n['pinned'], $n['date']])
-            ->values();
+
+        if (! array_key_exists((string) $category, Notice::CATEGORIES)) {
+            $category = null;
+        }
+
+        $notices = Notice::visible()
+            ->when($category, fn ($query) => $query->where('category', $category))
+            ->latestFirst()
+            ->paginate(12)
+            ->withQueryString();
 
         return view('pages.notices.index', ['notices' => $notices, 'category' => $category]);
     }
 
     public function notice(string $slug): View
     {
-        $notice = DemoContent::notice($slug);
+        $notice = Notice::visible()->where('slug', $slug)->firstOrFail();
 
-        abort_unless($notice, 404);
-
-        $others = collect(DemoContent::notices())->where('slug', '!=', $slug)->take(3);
+        $others = Notice::visible()->whereKeyNot($notice->getKey())->latestFirst()->take(4)->get();
 
         return view('pages.notices.show', ['notice' => $notice, 'others' => $others]);
     }
@@ -125,7 +130,7 @@ class PageController extends Controller
     public function careers(): View
     {
         return view('pages.careers', [
-            'notices' => collect(DemoContent::notices())->where('category', 'recruitment')->values(),
+            'notices' => Notice::visible()->where('category', 'recruitment')->latestFirst()->get(),
         ]);
     }
 

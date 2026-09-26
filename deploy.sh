@@ -24,7 +24,8 @@ echo "→ Updating the database"
 php artisan migrate --force
 
 echo "→ Linking uploaded files folder"
-php artisan storage:link 2>/dev/null || true
+# Hostinger blocks the artisan helper for this, so create the link directly.
+[ -e public/storage ] || ln -s ../storage/app/public public/storage
 
 echo "→ Refreshing caches"
 php artisan optimize:clear

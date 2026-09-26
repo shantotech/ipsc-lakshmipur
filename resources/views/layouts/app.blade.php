@@ -78,8 +78,8 @@
             <a href="{{ route('home') }}" class="flex shrink-0 items-center gap-3">
                 @include('partials.logo', ['class' => 'size-11'])
                 <span class="min-w-0 leading-tight">
-                    <span class="hidden font-display text-[1.05rem] font-semibold whitespace-nowrap text-brand-800 sm:block bn:font-sans bn:font-bold">{{ __('site.school.name') }}</span>
-                    <span class="block font-display text-[1.05rem] font-semibold whitespace-nowrap text-brand-800 sm:hidden bn:font-sans bn:font-bold">{{ __('site.school.short') }}</span>
+                    <span class="hidden font-display text-[1.05rem] font-semibold whitespace-nowrap text-brand-800 sm:block bn:font-bangla bn:font-bold">{{ __('site.school.name') }}</span>
+                    <span class="block font-display text-[1.05rem] font-semibold whitespace-nowrap text-brand-800 sm:hidden bn:font-bangla bn:font-bold">{{ __('site.school.short') }}</span>
                     <span class="block truncate text-xs font-medium tracking-wide text-gold-700">{{ __('site.school.branch') }}<span class="hidden sm:inline"> · {{ __('site.school.tagline') }}</span></span>
                 </span>
             </a>

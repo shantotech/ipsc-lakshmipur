@@ -1,12 +1,13 @@
 import Alpine from 'alpinejs';
 import collapse from '@alpinejs/collapse';
 
-// Self-hosted fonts: Hind Siliguri (Bangla + Latin body text) and Fraunces (display headings).
+// Self-hosted fonts: Figtree (English text), Hind Siliguri (Bangla text) and Fraunces (English headings).
 import '@fontsource/hind-siliguri/400.css';
 import '@fontsource/hind-siliguri/500.css';
 import '@fontsource/hind-siliguri/600.css';
 import '@fontsource/hind-siliguri/700.css';
 import '@fontsource-variable/fraunces/opsz.css';
+import '@fontsource-variable/figtree/wght.css';
 
 Alpine.plugin(collapse);
 
