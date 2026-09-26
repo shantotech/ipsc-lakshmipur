@@ -33,6 +33,7 @@
                 @endif
                 <form method="POST" action="{{ route('contact.submit') }}" class="card space-y-5 p-6 sm:p-8">
                     @csrf
+                    <div class="hidden" aria-hidden="true"><label>Website <input type="text" name="website" tabindex="-1" autocomplete="off"></label></div>
                     <h2 class="text-2xl font-semibold">{{ __('Send us a message') }}</h2>
                     <div class="grid gap-5 sm:grid-cols-2">
                         @include('partials.field', ['name' => 'name', 'label' => __('Your name'), 'required' => true])

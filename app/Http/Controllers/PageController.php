@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\AdmissionApplication;
+use App\Models\ContactMessage;
 use App\Models\GalleryAlbum;
 use App\Models\Notice;
 use App\Support\DemoContent;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 use Illuminate\View\View;
 
 class PageController extends Controller
@@ -79,11 +80,15 @@ class PageController extends Controller
 
     public function admissionSubmit(Request $request): RedirectResponse
     {
+        if ($this->isSpam($request)) {
+            return back()->with('status', __('Thank you. Your application has been received. The school office will contact you soon.'));
+        }
+
         $data = $request->validate([
             'student_name' => ['required', 'string', 'max:120'],
             'date_of_birth' => ['required', 'date', 'before:today'],
             'gender' => ['required', 'in:male,female'],
-            'class' => ['required', 'in:play,nursery,kg,one,two,three,four,five'],
+            'class' => ['required', 'in:'.implode(',', array_keys(AdmissionApplication::CLASSES))],
             'guardian_name' => ['required', 'string', 'max:120'],
             'phone' => ['required', 'string', 'max:20'],
             'email' => ['nullable', 'email', 'max:120'],
@@ -91,10 +96,15 @@ class PageController extends Controller
             'previous_school' => ['nullable', 'string', 'max:160'],
         ]);
 
-        // TODO (Admissions module): save the application to the database instead of the log.
-        Log::info('Online admission application', $data);
+        $application = AdmissionApplication::create($data + [
+            'academic_year' => AdmissionApplication::ACADEMIC_YEAR,
+            'status' => 'new',
+            'ip_address' => $request->ip(),
+        ]);
 
-        return back()->with('status', __('Thank you. Your application has been received. The school office will contact you soon.'));
+        return back()
+            ->with('status', __('Thank you. Your application has been received. The school office will contact you soon.'))
+            ->with('reference', $application->reference);
     }
 
     public function notices(Request $request): View
@@ -144,6 +154,10 @@ class PageController extends Controller
 
     public function contactSubmit(Request $request): RedirectResponse
     {
+        if ($this->isSpam($request)) {
+            return back()->with('status', __('Thank you for contacting us. We will reply as soon as possible.'));
+        }
+
         $data = $request->validate([
             'name' => ['required', 'string', 'max:120'],
             'phone' => ['required', 'string', 'max:20'],
@@ -152,9 +166,14 @@ class PageController extends Controller
             'message' => ['required', 'string', 'max:3000'],
         ]);
 
-        // TODO (Contact messages module): save to the database so staff see it in /admin.
-        Log::info('Contact form message', $data);
+        ContactMessage::create($data + ['ip_address' => $request->ip()]);
 
         return back()->with('status', __('Thank you for contacting us. We will reply as soon as possible.'));
+    }
+
+    /** Bots fill the hidden "website" field; people never see it. */
+    private function isSpam(Request $request): bool
+    {
+        return filled($request->input('website'));
     }
 }
