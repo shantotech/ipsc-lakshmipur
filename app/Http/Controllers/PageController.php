@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\AdmissionApplication;
 use App\Models\ContactMessage;
 use App\Models\GalleryAlbum;
+use App\Models\HeroSlide;
 use App\Models\Notice;
+use App\Models\Popup;
 use App\Support\DemoContent;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -16,6 +18,8 @@ class PageController extends Controller
     public function home(): View
     {
         return view('pages.home', [
+            'slides' => HeroSlide::active()->get(),
+            'popup' => Popup::current(),
             'notices' => Notice::visible()->latestFirst()->take(3)->get(),
             'events' => DemoContent::events(),
         ]);

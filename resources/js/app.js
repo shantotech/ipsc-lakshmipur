@@ -53,5 +53,88 @@ Alpine.data('gallery', (photos) => ({
     },
 }));
 
+// Homepage hero slider: fades between slides, plays only the visible video,
+// pauses when the tab is hidden, and has a pause button (accessibility).
+Alpine.data('heroSlider', (count) => ({
+    count,
+    index: 0,
+    playing: true,
+    timer: null,
+    reduced: window.matchMedia('(prefers-reduced-motion: reduce)').matches,
+    init() {
+        if (this.reduced) this.playing = false;
+        this.$nextTick(() => {
+            this.sync();
+            this.schedule();
+        });
+        document.addEventListener('visibilitychange', () => (document.hidden ? this.stop() : this.schedule()));
+    },
+    slides() {
+        return [...this.$root.querySelectorAll('[data-slide]')];
+    },
+    schedule() {
+        clearTimeout(this.timer);
+        if (!this.playing || this.count < 2 || document.hidden) return;
+        const duration = Number(this.slides()[this.index]?.dataset.duration || 7000);
+        this.timer = setTimeout(() => this.go(this.index + 1), duration);
+    },
+    stop() {
+        clearTimeout(this.timer);
+    },
+    go(i) {
+        this.index = (i + this.count) % this.count;
+        this.sync();
+        this.schedule();
+    },
+    next() {
+        this.go(this.index + 1);
+    },
+    prev() {
+        this.go(this.index - 1);
+    },
+    toggle() {
+        this.playing = !this.playing;
+        this.playing ? this.schedule() : this.stop();
+        this.sync();
+    },
+    sync() {
+        this.slides().forEach((slide, i) => {
+            const video = slide.querySelector('video');
+            if (!video) return;
+            if (i === this.index && !this.reduced && this.playing) {
+                video.preload = 'auto';
+                video.play().catch(() => {});
+            } else {
+                video.pause();
+            }
+        });
+    },
+}));
+
+// Event popup on the homepage. Shows once per visit (browser session) and
+// again after it is edited. Closes with the button, Esc or a click outside.
+Alpine.data('sitePopup', (key) => ({
+    open: false,
+    init() {
+        let seen = null;
+        try {
+            seen = sessionStorage.getItem(key);
+        } catch (e) {}
+        if (seen) return;
+        setTimeout(() => {
+            this.open = true;
+            document.body.classList.add('overflow-hidden');
+            this.$nextTick(() => this.$refs.close?.focus());
+        }, 1200);
+    },
+    close() {
+        this.open = false;
+        document.body.classList.remove('overflow-hidden');
+        try {
+            sessionStorage.setItem(key, '1');
+        } catch (e) {}
+    },
+}));
+
 window.Alpine = Alpine;
 Alpine.start();

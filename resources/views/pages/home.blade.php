@@ -7,72 +7,74 @@
 
 @section('content')
 
-    {{-- Hero: clean headline on a calm background (the reference site put text over a busy banner) --}}
-    <section class="bg-pattern-light relative overflow-hidden">
-        <div class="pointer-events-none absolute top-0 right-0 h-full w-1/2 bg-gradient-to-l from-brand-50 to-transparent"></div>
-        <div class="container-site relative grid items-center gap-12 py-14 sm:py-20 lg:grid-cols-2 lg:py-24">
-            <div>
-                <span class="inline-flex items-center gap-2 rounded-full bg-white px-3.5 py-1.5 text-sm font-semibold text-brand-700 shadow-sm ring-1 ring-brand-100">
-                    <span class="relative flex size-2"><span class="absolute inline-flex size-full animate-ping rounded-full bg-gold-400 opacity-75"></span><span class="relative inline-flex size-2 rounded-full bg-gold-500"></span></span>
-                    {{ __('site.hero.eyebrow') }}
-                </span>
-                <h1 class="mt-6 text-[2.6rem] leading-[1.1] font-semibold text-brand-900 sm:text-6xl bn:text-[2.4rem] bn:leading-[1.3] sm:bn:text-5xl">
-                    {{ __('site.hero.title') }}
-                </h1>
-                <p class="mt-6 max-w-xl text-lg leading-8 text-muted">{{ __('site.hero.text') }}</p>
-                <div class="mt-8 flex flex-wrap gap-3">
-                    <a href="{{ route('admission.apply') }}" class="btn-primary !px-6 !py-3">{{ __('site.hero.primary') }} @include('partials.icon', ['name' => 'arrow-right', 'class' => 'size-4'])</a>
-                    <a href="{{ route('about') }}" class="btn-outline !px-6 !py-3">{{ __('site.hero.secondary') }}</a>
+    @if ($slides->isNotEmpty())
+        {{-- Full-width slider (videos/photos managed in admin: Website → Homepage slider) --}}
+        @include('partials.hero-slider', ['slides' => $slides])
+        <div class="relative z-10 -mt-12 sm:-mt-14">
+            @include('partials.hero-stats', ['class' => 'pb-4'])
+        </div>
+    @else
+        {{-- Standard welcome section, shown until slides are added --}}
+        <section class="bg-pattern-light relative overflow-hidden">
+            <div class="pointer-events-none absolute top-0 right-0 h-full w-1/2 bg-gradient-to-l from-brand-50 to-transparent"></div>
+            <div class="container-site relative grid items-center gap-12 py-14 sm:py-20 lg:grid-cols-2 lg:py-24">
+                <div>
+                    <span class="inline-flex items-center gap-2 rounded-full bg-white px-3.5 py-1.5 text-sm font-semibold text-brand-700 shadow-sm ring-1 ring-brand-100">
+                        <span class="relative flex size-2"><span class="absolute inline-flex size-full animate-ping rounded-full bg-gold-400 opacity-75"></span><span class="relative inline-flex size-2 rounded-full bg-gold-500"></span></span>
+                        {{ __('site.hero.eyebrow') }}
+                    </span>
+                    <h1 class="mt-6 text-[2.6rem] leading-[1.1] font-semibold text-brand-900 sm:text-6xl bn:text-[2.4rem] bn:leading-[1.3] sm:bn:text-5xl">
+                        {{ __('site.hero.title') }}
+                    </h1>
+                    <p class="mt-6 max-w-xl text-lg leading-8 text-muted">{{ __('site.hero.text') }}</p>
+                    <div class="mt-8 flex flex-wrap gap-3">
+                        <a href="{{ route('admission.apply') }}" class="btn-primary !px-6 !py-3">{{ __('site.hero.primary') }} @include('partials.icon', ['name' => 'arrow-right', 'class' => 'size-4'])</a>
+                        <a href="{{ route('about') }}" class="btn-outline !px-6 !py-3">{{ __('site.hero.secondary') }}</a>
+                    </div>
                 </div>
-            </div>
 
-            <div class="relative mx-auto w-full max-w-md lg:max-w-none">
-                {{-- Arch-shaped frame: shows public/images/hero.jpg once uploaded --}}
-                <div class="relative mx-auto aspect-[4/5] w-full max-w-[26rem] overflow-hidden rounded-t-[12rem] rounded-b-[2rem] bg-brand-800 shadow-2xl shadow-brand-900/20 ring-8 ring-white">
-                    @if ($heroImage)
-                        <img src="{{ asset($heroImage) }}" alt="{{ __('site.school.full_name') }}" class="size-full object-cover">
-                    @else
-                        <div class="bg-pattern absolute inset-0"></div>
-                        <div class="absolute inset-0 bg-gradient-to-b from-transparent via-brand-800/20 to-brand-950/60"></div>
-                        <div class="absolute inset-0 flex flex-col items-center justify-center gap-5 p-10 text-center">
-                            @include('partials.logo', ['class' => 'size-28 drop-shadow-xl'])
-                            <p class="text-xl font-semibold text-white">{{ __('site.school.name') }}</p>
-                            <p class="-mt-3 text-gold-300">{{ __('site.school.branch') }}</p>
+                <div class="relative mx-auto w-full max-w-md lg:max-w-none">
+                    {{-- Arch-shaped frame: shows public/images/hero.jpg once uploaded --}}
+                    <div class="relative mx-auto aspect-[4/5] w-full max-w-[26rem] overflow-hidden rounded-t-[12rem] rounded-b-[2rem] bg-brand-800 shadow-2xl shadow-brand-900/20 ring-8 ring-white">
+                        @if ($heroImage)
+                            <img src="{{ asset($heroImage) }}" alt="{{ __('site.school.full_name') }}" class="size-full object-cover">
+                        @else
+                            <div class="bg-pattern absolute inset-0"></div>
+                            <div class="absolute inset-0 bg-gradient-to-b from-transparent via-brand-800/20 to-brand-950/60"></div>
+                            <div class="absolute inset-0 flex flex-col items-center justify-center gap-5 p-10 text-center">
+                                @include('partials.logo', ['class' => 'size-28 drop-shadow-xl'])
+                                <p class="text-xl font-semibold text-white">{{ __('site.school.name') }}</p>
+                                <p class="-mt-3 text-gold-300">{{ __('site.school.branch') }}</p>
+                            </div>
+                        @endif
+                    </div>
+
+                    {{-- Floating chips --}}
+                    <div class="absolute top-10 -left-2 rounded-2xl bg-white px-4 py-3 shadow-xl shadow-brand-900/10 ring-1 ring-line sm:-left-6">
+                        <p class="text-xs font-medium text-muted">{{ __('We teach in') }}</p>
+                        <div class="mt-1.5 flex gap-1.5 text-sm font-semibold">
+                            <span class="rounded-md bg-brand-50 px-2 py-0.5 text-brand-700">English</span>
+                            <span class="rounded-md bg-gold-50 px-2 py-0.5 text-gold-700" lang="ar" dir="rtl">العربية</span>
+                            <span class="rounded-md bg-red-50 px-2 py-0.5 text-accent-red" lang="bn">বাংলা</span>
                         </div>
-                    @endif
-                </div>
-
-                {{-- Floating chips --}}
-                <div class="absolute top-10 -left-2 rounded-2xl bg-white px-4 py-3 shadow-xl shadow-brand-900/10 ring-1 ring-line sm:-left-6">
-                    <p class="text-xs font-medium text-muted">{{ __('We teach in') }}</p>
-                    <div class="mt-1.5 flex gap-1.5 text-sm font-semibold">
-                        <span class="rounded-md bg-brand-50 px-2 py-0.5 text-brand-700">English</span>
-                        <span class="rounded-md bg-gold-50 px-2 py-0.5 text-gold-700" lang="ar" dir="rtl">العربية</span>
-                        <span class="rounded-md bg-red-50 px-2 py-0.5 text-accent-red" lang="bn">বাংলা</span>
                     </div>
-                </div>
-                <div class="absolute -right-2 bottom-12 flex items-center gap-3 rounded-2xl bg-white px-4 py-3 shadow-xl shadow-brand-900/10 ring-1 ring-line sm:-right-4">
-                    <span class="grid size-10 place-items-center rounded-full bg-gold-400 text-brand-950">@include('partials.icon', ['name' => 'graduation-cap', 'class' => 'size-5'])</span>
-                    <div>
-                        <p class="text-sm font-semibold text-ink">{{ __('Admission open') }}</p>
-                        <p class="text-xs text-muted">{{ __('Academic year') }} {{ Locale::number(2027) }}</p>
+                    <div class="absolute -right-2 bottom-12 flex items-center gap-3 rounded-2xl bg-white px-4 py-3 shadow-xl shadow-brand-900/10 ring-1 ring-line sm:-right-4">
+                        <span class="grid size-10 place-items-center rounded-full bg-gold-400 text-brand-950">@include('partials.icon', ['name' => 'graduation-cap', 'class' => 'size-5'])</span>
+                        <div>
+                            <p class="text-sm font-semibold text-ink">{{ __('Admission open') }}</p>
+                            <p class="text-xs text-muted">{{ __('Academic year') }} {{ Locale::number(2027) }}</p>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
 
-        {{-- Stats --}}
-        <div class="container-site relative pb-14">
-            <dl class="grid gap-px overflow-hidden rounded-2xl bg-line ring-1 ring-line sm:grid-cols-3">
-                @foreach (__('site.hero.stats') as $stat)
-                    <div class="bg-white px-6 py-5">
-                        <dt class="text-sm text-muted">{{ $stat['label'] }}</dt>
-                        <dd class="mt-1 font-display text-3xl font-semibold text-brand-700 bn:font-bangla bn:font-bold">{{ $stat['value'] }}</dd>
-                    </div>
-                @endforeach
-            </dl>
-        </div>
-    </section>
+            @include('partials.hero-stats')
+        </section>
+    @endif
+
+    @if ($popup)
+        @include('partials.popup', ['popup' => $popup])
+    @endif
 
     {{-- Why IPSC --}}
     <section class="container-site py-16 sm:py-24">

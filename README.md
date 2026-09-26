@@ -75,6 +75,8 @@ bash deploy.sh
 
 `deploy.sh` installs PHP packages, runs migrations, links storage and refreshes caches.
 
+Uploads: hero videos can be up to 50 MB, so in hPanel → PHP Configuration → PHP options set `upload_max_filesize` and `post_max_size` to at least 64M.
+
 Server `.env` essentials: `APP_ENV=production`, `APP_DEBUG=false`, `APP_URL=https://<domain>`, `APP_NOINDEX=true` while on the temporary domain, and the `DB_*` values from hPanel.
 
 Database changes only go through migrations: add-only and reversible. Back up the database before any deploy that includes a migration.
