@@ -11,7 +11,11 @@ set -e
 cd "$(dirname "$0")"
 
 echo "→ Installing PHP packages"
-composer install --no-dev --optimize-autoloader --no-interaction
+# --no-scripts: Hostinger disables proc_open, which Composer needs to run
+# Laravel's post-install scripts, so we run those steps directly below.
+composer install --no-dev --optimize-autoloader --no-interaction --no-scripts
+php artisan package:discover --ansi
+php artisan filament:upgrade
 
 echo "→ Putting the site in maintenance mode"
 php artisan down --retry=15 || true
