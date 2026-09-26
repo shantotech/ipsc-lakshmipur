@@ -62,13 +62,19 @@ The admin panel is at `http://localhost:8000/admin`.
 
 ## Deploying (Hostinger)
 
-After Hostinger pulls the latest `main`, these commands must run on the server (via SSH or a deploy script):
+The site is served from `public_html/ipsc/public` (subdomain document root). The project lives in `public_html/ipsc`; its root `.htaccess` refuses all web requests, so only `public/` is reachable.
+
+CSS/JS is built locally (`npm run build`) and `public/build` is committed, so the server doesn't need Node.js.
+
+After the server pulls the latest `main`, run:
 
 ```bash
-composer install --no-dev --optimize-autoloader
-php artisan migrate --force
-php artisan optimize
-npm ci && npm run build        # or commit the built assets if Node isn't available on the server
+cd ~/domains/modomake.agency/public_html/ipsc
+bash deploy.sh
 ```
+
+`deploy.sh` installs PHP packages, runs migrations, links storage and refreshes caches.
+
+Server `.env` essentials: `APP_ENV=production`, `APP_DEBUG=false`, `APP_URL=https://<domain>`, `APP_NOINDEX=true` while on the temporary domain, and the `DB_*` values from hPanel.
 
 Database changes only go through migrations: add-only and reversible. Back up the database before any deploy that includes a migration.

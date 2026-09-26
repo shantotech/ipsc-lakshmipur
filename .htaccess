@@ -1,0 +1,12 @@
+# Safety net: the website is served only from the public/ folder.
+# If the project folder itself is ever reached through a web address
+# (e.g. modomake.agency/ipsc/), refuse every request so no code or
+# settings files can be read. The public/ folder has its own rules.
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteRule ^ - [F,L]
+</IfModule>
+
+<FilesMatch "^\.">
+    Require all denied
+</FilesMatch>
