@@ -14,6 +14,9 @@
     <title>{{ $pageTitle }}</title>
     <meta name="description" content="{{ $description ?? __('site.meta.description') }}">
     <meta name="theme-color" content="#125735">
+    @if (config('app.noindex'))
+        <meta name="robots" content="noindex, nofollow">
+    @endif
 
     <meta property="og:type" content="website">
     <meta property="og:title" content="{{ $pageTitle }}">
