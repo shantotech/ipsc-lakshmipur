@@ -1,4 +1,12 @@
 {
+  "node_modules/@fontsource-variable/figtree/files/figtree-latin-ext-wght-normal.woff2": {
+    "file": "assets/figtree-latin-ext-wght-normal-DCwSJGxG.woff2",
+    "src": "node_modules/@fontsource-variable/figtree/files/figtree-latin-ext-wght-normal.woff2"
+  },
+  "node_modules/@fontsource-variable/figtree/files/figtree-latin-wght-normal.woff2": {
+    "file": "assets/figtree-latin-wght-normal-D_ZTVpCC.woff2",
+    "src": "node_modules/@fontsource-variable/figtree/files/figtree-latin-wght-normal.woff2"
+  },
   "node_modules/@fontsource-variable/fraunces/files/fraunces-latin-ext-opsz-normal.woff2": {
     "file": "assets/fraunces-latin-ext-opsz-normal-CJcjJNj7.woff2",
     "src": "node_modules/@fontsource-variable/fraunces/files/fraunces-latin-ext-opsz-normal.woff2"
@@ -108,7 +116,7 @@
     "src": "node_modules/@fontsource/hind-siliguri/files/hind-siliguri-latin-ext-700-normal.woff2"
   },
   "resources/css/app.css": {
-    "file": "assets/app-Djikx5cc.css",
+    "file": "assets/app-Bl-olucX.css",
     "name": "app",
     "names": [
       "app.css"
@@ -117,12 +125,12 @@
     "isEntry": true
   },
   "resources/js/app.js": {
-    "file": "assets/app-DfkC6jPO.js",
+    "file": "assets/app-BDkwcRKk.js",
     "name": "app",
     "src": "resources/js/app.js",
     "isEntry": true,
     "css": [
-      "assets/app-CRxqYeSB.css"
+      "assets/app-DSDQg5-K.css"
     ],
     "assets": [
       "assets/hind-siliguri-bengali-400-normal-rHQ7AW0H.woff2",
@@ -151,7 +159,9 @@
       "assets/hind-siliguri-latin-700-normal-z30-k5TQ.woff",
       "assets/fraunces-vietnamese-opsz-normal-Czevyj-6.woff2",
       "assets/fraunces-latin-ext-opsz-normal-CJcjJNj7.woff2",
-      "assets/fraunces-latin-opsz-normal-DihXLNYH.woff2"
+      "assets/fraunces-latin-opsz-normal-DihXLNYH.woff2",
+      "assets/figtree-latin-ext-wght-normal-DCwSJGxG.woff2",
+      "assets/figtree-latin-wght-normal-D_ZTVpCC.woff2"
     ]
   }
 }

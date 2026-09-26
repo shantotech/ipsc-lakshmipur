@@ -37,7 +37,7 @@ The admin panel is at `http://localhost:8000/admin`.
 
 ## Languages
 
-- Bangla is the default. URLs are prefixed with the language: `/bn/...` and `/en/...`. The root `/` redirects to `/bn`.
+- English is the default (`APP_LOCALE=en`). URLs are prefixed with the language: `/en/...` and `/bn/...`. The root `/` redirects to the default language.
 - Interface text lives in `lang/bn.json` and `lang/en.json` (keyed by the English text).
 - Page content lives in `lang/bn/site.php` and `lang/en/site.php` until the admin modules take it over.
 

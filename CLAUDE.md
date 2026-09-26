@@ -10,7 +10,7 @@ Website + admin panel for **International Peace School & College, Lakshmipur** (
 ## Rules
 - Never push to `main` directly: work on a `feature/...` or `fix/...` branch and open a PR.
 - Database changes only via migrations: add-only and reversible. No dropping or renaming columns that hold live data without a plan.
-- Bangla (`bn`) is the default language; every public page must work in both `bn` and `en`. Don't mix languages within a section.
+- English (`en`) is the default language, with Bangla (`bn`) one click away; every public page must work in both. The admin panel is in English. Don't mix languages within a section.
 - Interface strings: `__('English text')` with translations in `lang/bn.json`. Page content: `lang/{bn,en}/site.php` until it moves to the database.
 - Icons are inline SVG via `resources/views/partials/icon.blade.php` (no icon fonts).
 - Keep it fast: compiled Tailwind only, self-hosted fonts, no CDN scripts.

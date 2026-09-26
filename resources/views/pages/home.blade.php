@@ -67,7 +67,7 @@
                 @foreach (__('site.hero.stats') as $stat)
                     <div class="bg-white px-6 py-5">
                         <dt class="text-sm text-muted">{{ $stat['label'] }}</dt>
-                        <dd class="mt-1 font-display text-3xl font-semibold text-brand-700 bn:font-sans bn:font-bold">{{ $stat['value'] }}</dd>
+                        <dd class="mt-1 font-display text-3xl font-semibold text-brand-700 bn:font-bangla bn:font-bold">{{ $stat['value'] }}</dd>
                     </div>
                 @endforeach
             </dl>
@@ -135,9 +135,11 @@
                     <a href="{{ route('notices') }}" class="hidden shrink-0 items-center gap-1 font-semibold text-brand-700 hover:text-brand-900 sm:flex">{{ __('View all') }} @include('partials.icon', ['name' => 'arrow-right', 'class' => 'size-4'])</a>
                 </div>
                 <div class="card mt-8 divide-y divide-line p-2">
-                    @foreach ($notices as $notice)
+                    @forelse ($notices as $notice)
                         @include('partials.notice-item', ['notice' => $notice])
-                    @endforeach
+                    @empty
+                        <p class="p-8 text-center text-muted">{{ __('No notices have been published yet.') }}</p>
+                    @endforelse
                 </div>
                 <a href="{{ route('notices') }}" class="btn-outline mt-5 w-full sm:hidden">{{ __('View all notices') }}</a>
             </div>
