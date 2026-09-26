@@ -116,7 +116,7 @@
     "src": "node_modules/@fontsource/hind-siliguri/files/hind-siliguri-latin-ext-700-normal.woff2"
   },
   "resources/css/app.css": {
-    "file": "assets/app-B20hQJm_.css",
+    "file": "assets/app-BfB6yTdQ.css",
     "name": "app",
     "names": [
       "app.css"
@@ -125,7 +125,7 @@
     "isEntry": true
   },
   "resources/js/app.js": {
-    "file": "assets/app-BDkwcRKk.js",
+    "file": "assets/app-CVaMuHOI.js",
     "name": "app",
     "src": "resources/js/app.js",
     "isEntry": true,
