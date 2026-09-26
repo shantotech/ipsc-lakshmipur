@@ -18,7 +18,7 @@ class HeroSlidesTable
         return $table
             ->reorderable('sort_order')
             ->defaultSort('sort_order')
-            ->description('Slides play in this order. Drag the handle to reorder. If there are no slides, the homepage shows the standard welcome section.')
+            ->description('Slides play in this order; drag to reorder. The main homepage text stays on top of every slide unless a slide has its own title. With no slides, the homepage shows the standard welcome section.')
             ->columns([
                 ImageColumn::make('image')
                     ->label('')
@@ -28,7 +28,7 @@ class HeroSlidesTable
                     ->extraImgAttributes(['class' => 'rounded-md object-cover']),
                 TextColumn::make('title_en')
                     ->label('Title')
-                    ->placeholder('Photo only')
+                    ->placeholder('Main homepage text')
                     ->description(fn (HeroSlide $record) => $record->title_bn)
                     ->wrap(),
                 TextColumn::make('media_type')

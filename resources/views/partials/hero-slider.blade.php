@@ -1,7 +1,10 @@
 {{--
-    Full-width homepage slider. Each slide has a background video or photo,
-    with optional label, title, text and button.
+    Full-width homepage slider. Photos/videos change in the background while the
+    main homepage text stays on top. A slide with its own title shows that instead.
 --}}
+@php
+    $hasOwnText = $slides->map(fn ($s) => filled($s->localized('title')))->values();
+@endphp
 <section x-data="heroSlider({{ $slides->count() }})" class="relative isolate h-[clamp(520px,82vh,820px)] overflow-hidden bg-brand-950 text-white"
          aria-roledescription="carousel" aria-label="{{ __('Highlights') }}">
 
@@ -26,15 +29,13 @@
                      @if ($i === 0) fetchpriority="high" @else loading="lazy" @endif>
             @endif
 
-            {{-- Shade so text stays readable on any photo --}}
-            @if ($slide->localized('title') || $slide->localized('text'))
-                <div class="absolute inset-0 bg-gradient-to-r from-brand-950/85 via-brand-950/50 to-brand-950/5"></div>
-            @endif
-            <div class="absolute inset-x-0 bottom-0 h-40 bg-gradient-to-t from-brand-950/70 to-transparent"></div>
+            {{-- Shade so the text stays readable on any photo --}}
+            <div class="absolute inset-0 bg-gradient-to-r from-brand-950/85 via-brand-950/45 to-brand-950/0"></div>
+            <div class="absolute inset-x-0 bottom-0 h-44 bg-gradient-to-t from-brand-950/75 to-transparent"></div>
 
             {{-- Text --}}
-            @if ($slide->localized('title') || $slide->localized('text'))
-                <div class="container-site relative flex h-full items-center pb-16">
+            @if ($slide->localized('title'))
+                <div class="container-site relative flex h-full items-center pb-32 sm:pb-16">
                     <div class="max-w-2xl" x-bind:class="index === {{ $i }} ? 'hero-rise' : ''">
                         @if ($slide->localized('eyebrow'))
                             <span class="inline-flex items-center gap-2 rounded-full bg-white/10 px-3.5 py-1.5 text-sm font-semibold text-gold-200 ring-1 ring-white/25 backdrop-blur">
@@ -43,7 +44,7 @@
                             </span>
                         @endif
                         @if ($slide->localized('title'))
-                            <h{{ $i === 0 ? '1' : '2' }} class="mt-5 text-[2.4rem] leading-[1.1] font-semibold text-balance text-white sm:text-6xl bn:text-[2.2rem] bn:leading-[1.3] sm:bn:text-5xl">{!! nl2br(e($slide->localized('title'))) !!}</h{{ $i === 0 ? '1' : '2' }}>
+                            <h2 class="mt-5 text-[2.4rem] leading-[1.1] font-semibold text-balance text-white sm:text-6xl bn:text-[2.2rem] bn:leading-[1.3] sm:bn:text-5xl">{!! nl2br(e($slide->localized('title'))) !!}</h2>
                         @endif
                         @if ($slide->localized('text'))
                             <p class="mt-5 max-w-xl text-lg leading-8 text-white/85">{{ $slide->localized('text') }}</p>
@@ -58,6 +59,24 @@
             @endif
         </div>
     @endforeach
+
+    {{-- Main homepage text, shown over every slide that has no title of its own --}}
+    <div class="pointer-events-none absolute inset-0 z-10" x-show="! @js($hasOwnText)[index]" x-transition.opacity.duration.500ms>
+        <div class="container-site flex h-full items-center pb-32 sm:pb-16">
+            <div class="hero-rise pointer-events-auto max-w-2xl">
+                <span class="inline-flex items-center gap-2 rounded-full bg-white/10 px-3.5 py-1.5 text-sm font-semibold text-gold-200 ring-1 ring-white/25 backdrop-blur">
+                    <span class="relative flex size-2"><span class="absolute inline-flex size-full animate-ping rounded-full bg-gold-400 opacity-75"></span><span class="relative inline-flex size-2 rounded-full bg-gold-400"></span></span>
+                    {{ __('site.hero.eyebrow') }}
+                </span>
+                <h1 class="mt-5 text-[2.4rem] leading-[1.1] font-semibold text-balance text-white drop-shadow-sm sm:text-6xl bn:text-[2.2rem] bn:leading-[1.3] sm:bn:text-5xl">{{ __('site.hero.title') }}</h1>
+                <p class="mt-5 max-w-xl text-lg leading-8 text-white/85">{{ __('site.hero.text') }}</p>
+                <div class="mt-8 flex flex-wrap gap-3">
+                    <a href="{{ route('admission.apply') }}" class="btn-gold !px-6 !py-3">{{ __('site.hero.primary') }} @include('partials.icon', ['name' => 'arrow-right', 'class' => 'size-4'])</a>
+                    <a href="{{ route('about') }}" class="btn-ghost-light !px-6 !py-3 backdrop-blur">{{ __('site.hero.secondary') }}</a>
+                </div>
+            </div>
+        </div>
+    </div>
 
     {{-- Controls --}}
     @if ($slides->count() > 1)
