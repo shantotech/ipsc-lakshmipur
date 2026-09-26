@@ -27,7 +27,7 @@
                 <span class="grid size-12 place-items-center rounded-2xl bg-gold-400 text-brand-950">@include('partials.icon', ['name' => 'briefcase', 'class' => 'size-6'])</span>
                 <h2 class="mt-5 text-xl font-semibold text-white">{{ __('How to apply') }}</h2>
                 <p class="mt-2 text-white/80">{{ __('site.careers.apply_text') }}</p>
-                <a href="mailto:{{ __('site.school.email') }}" class="mt-5 inline-flex items-center gap-2 font-semibold break-all text-gold-300 hover:text-gold-200">@include('partials.icon', ['name' => 'mail', 'class' => 'size-4 shrink-0']) {{ __('site.school.email') }}</a>
+                <a href="mailto:{{ Site::get('email') }}" class="mt-5 inline-flex items-center gap-2 font-semibold break-all text-gold-300 hover:text-gold-200">@include('partials.icon', ['name' => 'mail', 'class' => 'size-4 shrink-0']) {{ Site::get('email') }}</a>
             </div>
         </aside>
     </section>

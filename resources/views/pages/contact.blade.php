@@ -6,10 +6,10 @@
     <section class="container-site py-16 sm:py-20">
         <div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
             @foreach ([
-                ['icon' => 'map-pin', 'label' => __('Address'), 'value' => __('site.school.address'), 'href' => null],
-                ['icon' => 'phone', 'label' => __('Phone'), 'value' => __('site.school.phone'), 'href' => 'tel:'.preg_replace('/[^0-9+]/', '', __('site.school.phone'))],
-                ['icon' => 'mail', 'label' => __('Email'), 'value' => __('site.school.email'), 'href' => 'mailto:'.__('site.school.email')],
-                ['icon' => 'clock', 'label' => __('Office hours'), 'value' => __('site.school.office_hours'), 'href' => null],
+                ['icon' => 'map-pin', 'label' => __('Address'), 'value' => Site::get('address'), 'href' => null],
+                ['icon' => 'phone', 'label' => __('Phone'), 'value' => Site::get('phone').(Site::get('phone_2') ? ' / '.Site::get('phone_2') : ''), 'href' => Site::phoneHref()],
+                ['icon' => 'mail', 'label' => __('Email'), 'value' => Site::get('email'), 'href' => 'mailto:'.Site::get('email')],
+                ['icon' => 'clock', 'label' => __('Office hours'), 'value' => Site::get('office_hours'), 'href' => null],
             ] as $info)
                 <div class="card p-6">
                     <span class="grid size-11 place-items-center rounded-xl bg-brand-50 text-brand-600">@include('partials.icon', ['name' => $info['icon']])</span>
@@ -46,7 +46,7 @@
                 </form>
             </div>
             <div class="card min-h-80 overflow-hidden">
-                <iframe title="{{ __('Map') }}" src="https://maps.google.com/maps?q={{ urlencode(__('site.contact.map_query')) }}&z=14&output=embed" class="size-full min-h-80 border-0" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                <iframe title="{{ __('Map') }}" src="https://maps.google.com/maps?q={{ urlencode(Site::get('map_query')) }}&z=14&output=embed" class="size-full min-h-80 border-0" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
             </div>
         </div>
     </section>
