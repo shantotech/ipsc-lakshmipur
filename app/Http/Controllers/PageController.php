@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\GalleryAlbum;
 use App\Models\Notice;
 use App\Support\DemoContent;
 use Illuminate\Http\RedirectResponse;
@@ -124,7 +125,9 @@ class PageController extends Controller
 
     public function gallery(): View
     {
-        return view('pages.gallery', ['photos' => DemoContent::gallery()]);
+        return view('pages.gallery', [
+            'albums' => GalleryAlbum::visible()->ordered()->with('photos')->get(),
+        ]);
     }
 
     public function careers(): View
