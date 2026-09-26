@@ -3,7 +3,7 @@
     use App\Support\Navigation;
 
     $nav = Navigation::main();
-    $pageTitle = isset($title) && $title ? $title.' — '.__('site.school.full_name') : __('site.school.full_name').' — '.__('site.school.tagline');
+    $pageTitle = isset($title) && $title ? $title.' — '.Site::fullName() : Site::fullName().' — '.Site::get('tagline');
 @endphp
 <!DOCTYPE html>
 <html lang="{{ app()->getLocale() }}">
@@ -12,7 +12,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>{{ $pageTitle }}</title>
-    <meta name="description" content="{{ $description ?? __('site.meta.description') }}">
+    <meta name="description" content="{{ $description ?? Site::get('meta_description') }}">
     <meta name="theme-color" content="#125735">
     @if (config('app.noindex'))
         <meta name="robots" content="noindex, nofollow">
@@ -20,12 +20,12 @@
 
     <meta property="og:type" content="website">
     <meta property="og:title" content="{{ $pageTitle }}">
-    <meta property="og:description" content="{{ $description ?? __('site.meta.description') }}">
+    <meta property="og:description" content="{{ $description ?? Site::get('meta_description') }}">
     <meta property="og:url" content="{{ url()->current() }}">
     <meta property="og:locale" content="{{ Locale::isBangla() ? 'bn_BD' : 'en_US' }}">
 
     <link rel="alternate" hreflang="{{ Locale::isBangla() ? 'en' : 'bn' }}" href="{{ Locale::switchUrl() }}">
-    <link rel="icon" href="{{ asset('favicon.ico') }}">
+    <link rel="icon" href="{{ Site::logoUrl() ?? asset('favicon.ico') }}">
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
@@ -33,13 +33,13 @@
     <a href="#main" class="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[100] focus:rounded-lg focus:bg-white focus:px-4 focus:py-2 focus:shadow">{{ __('Skip to content') }}</a>
 
     {{-- Announcement (replaces the reference site's instant popup) --}}
-    @if (__('site.announcement.text') && ! request()->routeIs('admission.apply'))
-        <div x-data="announcement(@js(__('site.announcement.id')))" x-show="open" x-collapse x-cloak class="bg-gold-400 text-brand-950">
+    @if (Site::announcementEnabled() && Site::get('announcement_text') && ! request()->routeIs('admission.apply'))
+        <div x-data="announcement(@js(Site::announcementId()))" x-show="open" x-collapse x-cloak class="bg-gold-400 text-brand-950">
             <div class="container-site flex items-center gap-3 py-2 text-sm">
                 @include('partials.icon', ['name' => 'megaphone', 'class' => 'size-4 shrink-0'])
                 <p class="flex-1 leading-snug">
-                    <span class="font-semibold">{{ __('site.announcement.text') }}</span>
-                    <a href="{{ route('admission.apply') }}" class="ml-1 font-semibold whitespace-nowrap underline decoration-brand-900/40 underline-offset-4 hover:decoration-brand-900">{{ __('site.announcement.link_label') }} →</a>
+                    <span class="font-semibold">{{ Site::get('announcement_text') }}</span>
+                    <a href="{{ Site::announcementUrl() }}" class="ml-1 font-semibold whitespace-nowrap underline decoration-brand-900/40 underline-offset-4 hover:decoration-brand-900">{{ Site::get('announcement_link_label') }} →</a>
                 </p>
                 <button type="button" x-on:click="close()" class="rounded-full p-1 hover:bg-black/10" aria-label="{{ __('Close') }}">
                     @include('partials.icon', ['name' => 'x', 'class' => 'size-4'])
@@ -52,22 +52,23 @@
     <div class="hidden bg-brand-900 text-sm text-white/80 md:block">
         <div class="container-site flex h-10 items-center justify-between">
             <div class="flex items-center gap-6">
-                <a href="tel:{{ preg_replace('/[^0-9+]/', '', __('site.school.phone')) }}" class="flex items-center gap-2 hover:text-white">
+                <a href="{{ Site::phoneHref() }}" class="flex items-center gap-2 hover:text-white">
                     @include('partials.icon', ['name' => 'phone', 'class' => 'size-3.5'])
-                    <span dir="ltr">{{ __('site.school.phone') }}</span>
+                    <span dir="ltr">{{ Site::get('phone') }}</span>
                 </a>
-                <a href="mailto:{{ __('site.school.email') }}" class="flex items-center gap-2 hover:text-white">
+                <a href="mailto:{{ Site::get('email') }}" class="flex items-center gap-2 hover:text-white">
                     @include('partials.icon', ['name' => 'mail', 'class' => 'size-3.5'])
-                    {{ __('site.school.email') }}
+                    {{ Site::get('email') }}
                 </a>
                 <span class="hidden items-center gap-2 lg:flex">
                     @include('partials.icon', ['name' => 'clock', 'class' => 'size-3.5'])
-                    {{ __('site.school.office_hours') }}
+                    {{ Site::get('office_hours') }}
                 </span>
             </div>
             <div class="flex items-center gap-4">
-                <a href="{{ __('site.school.facebook') }}" class="hover:text-white" aria-label="Facebook">@include('partials.icon', ['name' => 'facebook', 'class' => 'size-4'])</a>
-                <a href="{{ __('site.school.youtube') }}" class="hover:text-white" aria-label="YouTube">@include('partials.icon', ['name' => 'youtube', 'class' => 'size-4'])</a>
+                @foreach (Site::socialLinks() as $network => $url)
+                    <a href="{{ $url }}" target="_blank" rel="noopener" class="hover:text-white" aria-label="{{ ucfirst($network) }}">@include('partials.icon', ['name' => $network, 'class' => 'size-4'])</a>
+                @endforeach
             </div>
         </div>
     </div>
@@ -78,9 +79,9 @@
             <a href="{{ route('home') }}" class="flex shrink-0 items-center gap-3">
                 @include('partials.logo', ['class' => 'size-11'])
                 <span class="min-w-0 leading-tight">
-                    <span class="hidden font-display text-[1.05rem] font-semibold whitespace-nowrap text-brand-800 sm:block bn:font-bangla bn:font-bold">{{ __('site.school.name') }}</span>
+                    <span class="hidden font-display text-[1.05rem] font-semibold whitespace-nowrap text-brand-800 sm:block bn:font-bangla bn:font-bold">{{ Site::get('school_name') }}</span>
                     <span class="block font-display text-[1.05rem] font-semibold whitespace-nowrap text-brand-800 sm:hidden bn:font-bangla bn:font-bold">{{ __('site.school.short') }}</span>
-                    <span class="block truncate text-xs font-medium tracking-wide text-gold-700">{{ __('site.school.branch') }}<span class="hidden sm:inline"> · {{ __('site.school.tagline') }}</span></span>
+                    <span class="block truncate text-xs font-medium tracking-wide text-gold-700">{{ Site::get('branch') }}<span class="hidden sm:inline"> · {{ Site::get('tagline') }}</span></span>
                 </span>
             </a>
 
@@ -162,7 +163,7 @@
                 </nav>
                 <div class="space-y-3 border-t border-line p-5">
                     <a href="{{ route('admission.apply') }}" class="btn-primary w-full">{{ __('Apply for Admission') }}</a>
-                    <a href="tel:{{ preg_replace('/[^0-9+]/', '', __('site.school.phone')) }}" class="btn-outline w-full">@include('partials.icon', ['name' => 'phone', 'class' => 'size-4']) <span dir="ltr">{{ __('site.school.phone') }}</span></a>
+                    <a href="{{ Site::phoneHref() }}" class="btn-outline w-full">@include('partials.icon', ['name' => 'phone', 'class' => 'size-4']) <span dir="ltr">{{ Site::get('phone') }}</span></a>
                 </div>
             </div>
         </div>
@@ -179,15 +180,18 @@
                 <a href="{{ route('home') }}" class="flex items-center gap-3">
                     @include('partials.logo', ['class' => 'size-12'])
                     <span class="leading-tight">
-                        <span class="block font-semibold text-white">{{ __('site.school.name') }}</span>
-                        <span class="block text-sm text-gold-300">{{ __('site.school.branch') }}</span>
+                        <span class="block font-semibold text-white">{{ Site::get('school_name') }}</span>
+                        <span class="block text-sm text-gold-300">{{ Site::get('branch') }}</span>
                     </span>
                 </a>
-                <p class="mt-5 max-w-sm leading-7">{{ __('site.school.tagline') }}<br>{{ __('site.school.version') }}</p>
-                <div class="mt-6 flex gap-3">
-                    <a href="{{ __('site.school.facebook') }}" class="grid size-10 place-items-center rounded-full bg-white/10 transition hover:bg-gold-400 hover:text-brand-950" aria-label="Facebook">@include('partials.icon', ['name' => 'facebook', 'class' => 'size-4'])</a>
-                    <a href="{{ __('site.school.youtube') }}" class="grid size-10 place-items-center rounded-full bg-white/10 transition hover:bg-gold-400 hover:text-brand-950" aria-label="YouTube">@include('partials.icon', ['name' => 'youtube', 'class' => 'size-4'])</a>
-                </div>
+                <p class="mt-5 max-w-sm leading-7">{{ Site::get('tagline') }}<br>{{ Site::get('version') }}</p>
+                @if (Site::socialLinks())
+                    <div class="mt-6 flex gap-3">
+                        @foreach (Site::socialLinks() as $network => $url)
+                            <a href="{{ $url }}" target="_blank" rel="noopener" class="grid size-10 place-items-center rounded-full bg-white/10 transition hover:bg-gold-400 hover:text-brand-950" aria-label="{{ ucfirst($network) }}">@include('partials.icon', ['name' => $network, 'class' => 'size-4'])</a>
+                        @endforeach
+                    </div>
+                @endif
             </div>
 
             <div class="lg:col-span-2">
@@ -215,16 +219,16 @@
             <div class="lg:col-span-4">
                 <h2 class="font-sans text-sm font-semibold tracking-wide text-white uppercase bn:normal-case">{{ __('Contact') }}</h2>
                 <ul class="mt-4 space-y-3.5">
-                    <li class="flex gap-3">@include('partials.icon', ['name' => 'map-pin', 'class' => 'mt-1 size-4 shrink-0 text-gold-300']) {{ __('site.school.address') }}</li>
-                    <li class="flex gap-3">@include('partials.icon', ['name' => 'phone', 'class' => 'mt-1 size-4 shrink-0 text-gold-300']) <a href="tel:{{ preg_replace('/[^0-9+]/', '', __('site.school.phone')) }}" class="hover:text-gold-300" dir="ltr">{{ __('site.school.phone') }}</a></li>
-                    <li class="flex gap-3">@include('partials.icon', ['name' => 'mail', 'class' => 'mt-1 size-4 shrink-0 text-gold-300']) <a href="mailto:{{ __('site.school.email') }}" class="break-all hover:text-gold-300">{{ __('site.school.email') }}</a></li>
-                    <li class="flex gap-3">@include('partials.icon', ['name' => 'clock', 'class' => 'mt-1 size-4 shrink-0 text-gold-300']) {{ __('site.school.office_hours') }}</li>
+                    <li class="flex gap-3">@include('partials.icon', ['name' => 'map-pin', 'class' => 'mt-1 size-4 shrink-0 text-gold-300']) {{ Site::get('address') }}</li>
+                    <li class="flex gap-3">@include('partials.icon', ['name' => 'phone', 'class' => 'mt-1 size-4 shrink-0 text-gold-300']) <a href="{{ Site::phoneHref() }}" class="hover:text-gold-300" dir="ltr">{{ Site::get('phone') }}</a>@if (Site::get('phone_2'))<span class="text-white/40"> / </span><a href="{{ Site::phoneHref(Site::get('phone_2')) }}" class="hover:text-gold-300" dir="ltr">{{ Site::get('phone_2') }}</a>@endif</li>
+                    <li class="flex gap-3">@include('partials.icon', ['name' => 'mail', 'class' => 'mt-1 size-4 shrink-0 text-gold-300']) <a href="mailto:{{ Site::get('email') }}" class="break-all hover:text-gold-300">{{ Site::get('email') }}</a></li>
+                    <li class="flex gap-3">@include('partials.icon', ['name' => 'clock', 'class' => 'mt-1 size-4 shrink-0 text-gold-300']) {{ Site::get('office_hours') }}</li>
                 </ul>
             </div>
         </div>
         <div class="border-t border-white/10">
             <div class="container-site flex flex-col gap-2 py-5 text-sm text-white/55 sm:flex-row sm:items-center sm:justify-between">
-                <p>© {{ Locale::number(date('Y')) }} {{ __('site.school.full_name') }}. {{ __('All rights reserved.') }}</p>
+                <p>© {{ Locale::number(date('Y')) }} {{ Site::fullName() }}. {{ __('All rights reserved.') }}</p>
                 <p>{{ __('A branch of the International Peace School & College network') }}</p>
             </div>
         </div>

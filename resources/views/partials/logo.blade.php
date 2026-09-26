@@ -1,11 +1,9 @@
-{{-- School emblem. Swap for the official logo by adding public/images/logo.svg (or .png). --}}
-@php
-    $official = collect(['images/logo.svg', 'images/logo.png'])->first(fn ($p) => file_exists(public_path($p)));
-@endphp
-@if ($official)
-    <img src="{{ asset($official) }}" alt="{{ __('site.school.full_name') }}" class="{{ $class ?? 'size-11' }} object-contain">
+{{-- School logo: uploaded in admin (Settings → Logo), otherwise the built-in emblem. --}}
+@php($logoUrl = Site::logoUrl())
+@if ($logoUrl)
+    <img src="{{ $logoUrl }}" alt="{{ Site::fullName() }}" class="{{ $class ?? 'size-11' }} object-contain">
 @else
-    <svg viewBox="0 0 48 48" class="{{ $class ?? 'size-11' }}" role="img" aria-label="{{ __('site.school.full_name') }}">
+    <svg viewBox="0 0 48 48" class="{{ $class ?? 'size-11' }}" role="img" aria-label="{{ Site::fullName() }}">
         <circle cx="24" cy="24" r="23" fill="#125735"/>
         <circle cx="24" cy="24" r="19" fill="none" stroke="#edbb3f" stroke-width="1.5" stroke-dasharray="20 4"/>
         <path d="M24 10l3.4 8 8 3.4-8 3.4-3.4 8-3.4-8-8-3.4 8-3.4z" fill="#edbb3f"/>

@@ -12,7 +12,7 @@
             </div>
             <div class="flex flex-wrap gap-3">
                 <a href="{{ route('admission.apply') }}" class="btn-gold !px-6 !py-3">{{ __('Apply Online') }} @include('partials.icon', ['name' => 'arrow-right', 'class' => 'size-4'])</a>
-                <a href="tel:{{ preg_replace('/[^0-9+]/', '', __('site.school.phone')) }}" class="btn-ghost-light !px-6 !py-3">@include('partials.icon', ['name' => 'phone', 'class' => 'size-4']) {{ __('Call the office') }}</a>
+                <a href="{{ Site::phoneHref() }}" class="btn-ghost-light !px-6 !py-3">@include('partials.icon', ['name' => 'phone', 'class' => 'size-4']) {{ __('Call the office') }}</a>
             </div>
         </div>
     </div>

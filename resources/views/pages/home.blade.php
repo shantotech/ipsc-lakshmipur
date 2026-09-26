@@ -21,12 +21,12 @@
                 <div>
                     <span class="inline-flex items-center gap-2 rounded-full bg-white px-3.5 py-1.5 text-sm font-semibold text-brand-700 shadow-sm ring-1 ring-brand-100">
                         <span class="relative flex size-2"><span class="absolute inline-flex size-full animate-ping rounded-full bg-gold-400 opacity-75"></span><span class="relative inline-flex size-2 rounded-full bg-gold-500"></span></span>
-                        {{ __('site.hero.eyebrow') }}
+                        {{ Site::get('hero_eyebrow') }}
                     </span>
                     <h1 class="mt-6 text-[2.6rem] leading-[1.1] font-semibold text-brand-900 sm:text-6xl bn:text-[2.4rem] bn:leading-[1.3] sm:bn:text-5xl">
-                        {{ __('site.hero.title') }}
+                        {{ Site::get('hero_title') }}
                     </h1>
-                    <p class="mt-6 max-w-xl text-lg leading-8 text-muted">{{ __('site.hero.text') }}</p>
+                    <p class="mt-6 max-w-xl text-lg leading-8 text-muted">{{ Site::get('hero_text') }}</p>
                     <div class="mt-8 flex flex-wrap gap-3">
                         <a href="{{ route('admission.apply') }}" class="btn-primary !px-6 !py-3">{{ __('site.hero.primary') }} @include('partials.icon', ['name' => 'arrow-right', 'class' => 'size-4'])</a>
                         <a href="{{ route('about') }}" class="btn-outline !px-6 !py-3">{{ __('site.hero.secondary') }}</a>
@@ -37,14 +37,14 @@
                     {{-- Arch-shaped frame: shows public/images/hero.jpg once uploaded --}}
                     <div class="relative mx-auto aspect-[4/5] w-full max-w-[26rem] overflow-hidden rounded-t-[12rem] rounded-b-[2rem] bg-brand-800 shadow-2xl shadow-brand-900/20 ring-8 ring-white">
                         @if ($heroImage)
-                            <img src="{{ asset($heroImage) }}" alt="{{ __('site.school.full_name') }}" class="size-full object-cover">
+                            <img src="{{ asset($heroImage) }}" alt="{{ Site::fullName() }}" class="size-full object-cover">
                         @else
                             <div class="bg-pattern absolute inset-0"></div>
                             <div class="absolute inset-0 bg-gradient-to-b from-transparent via-brand-800/20 to-brand-950/60"></div>
                             <div class="absolute inset-0 flex flex-col items-center justify-center gap-5 p-10 text-center">
                                 @include('partials.logo', ['class' => 'size-28 drop-shadow-xl'])
-                                <p class="text-xl font-semibold text-white">{{ __('site.school.name') }}</p>
-                                <p class="-mt-3 text-gold-300">{{ __('site.school.branch') }}</p>
+                                <p class="text-xl font-semibold text-white">{{ Site::get('school_name') }}</p>
+                                <p class="-mt-3 text-gold-300">{{ Site::get('branch') }}</p>
                             </div>
                         @endif
                     </div>
@@ -80,7 +80,7 @@
     <section class="container-site py-16 sm:py-24">
         <div class="mx-auto max-w-2xl text-center">
             <span class="eyebrow justify-center">{{ __('Why choose us') }}</span>
-            <h2 class="section-title">{{ __('site.school.tagline') }}</h2>
+            <h2 class="section-title">{{ Site::get('tagline') }}</h2>
         </div>
         <div class="mt-12 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
             @foreach (__('site.features') as $i => $feature)
@@ -101,7 +101,7 @@
         <div class="container-site grid gap-12 lg:grid-cols-12 lg:gap-16">
             <div class="lg:col-span-6">
                 <span class="eyebrow">{{ __('About Us') }}</span>
-                <h2 class="section-title">{{ __('site.school.full_name') }}</h2>
+                <h2 class="section-title">{{ Site::fullName() }}</h2>
                 <p class="mt-6 border-l-4 border-gold-400 pl-5 text-lg leading-8 font-medium text-ink/90">{{ __('site.about.lead') }}</p>
                 <p class="mt-5 leading-8 text-muted">{{ __('site.about.body')[0] }}</p>
                 <a href="{{ route('about') }}" class="btn-outline mt-8">{{ __('Read more') }} @include('partials.icon', ['name' => 'arrow-right', 'class' => 'size-4'])</a>

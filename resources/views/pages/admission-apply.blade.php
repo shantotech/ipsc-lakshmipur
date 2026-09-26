@@ -63,8 +63,8 @@
             <div class="rounded-3xl bg-brand-800 p-7 text-white">
                 <h2 class="text-xl font-semibold text-white">{{ __('Need help?') }}</h2>
                 <p class="mt-2 text-white/75">{{ __('Our office will gladly help you fill in the form.') }}</p>
-                <a href="tel:{{ preg_replace('/[^0-9+]/', '', __('site.school.phone')) }}" class="mt-5 flex items-center gap-3 text-lg font-semibold text-gold-300">@include('partials.icon', ['name' => 'phone']) <span dir="ltr">{{ __('site.school.phone') }}</span></a>
-                <p class="mt-2 text-sm text-white/60">{{ __('site.school.office_hours') }}</p>
+                <a href="{{ Site::phoneHref() }}" class="mt-5 flex items-center gap-3 text-lg font-semibold text-gold-300">@include('partials.icon', ['name' => 'phone']) <span dir="ltr">{{ Site::get('phone') }}</span></a>
+                <p class="mt-2 text-sm text-white/60">{{ Site::get('office_hours') }}</p>
             </div>
             <div class="card p-7">
                 <h2 class="text-xl font-semibold">{{ __('site.admission.documents_title') }}</h2>

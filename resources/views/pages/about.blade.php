@@ -1,7 +1,7 @@
 @extends('layouts.app', ['title' => __('site.about.title')])
 
 @section('content')
-    @include('partials.page-header', ['title' => __('site.about.title'), 'intro' => __('site.school.tagline').' — '.__('site.school.version')])
+    @include('partials.page-header', ['title' => __('site.about.title'), 'intro' => Site::get('tagline').' — '.Site::get('version')])
 
     <section class="container-site grid gap-12 py-16 sm:py-20 lg:grid-cols-12">
         <div class="lg:col-span-7">

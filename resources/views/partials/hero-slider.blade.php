@@ -24,7 +24,7 @@
                     <source src="{{ $slide->videoUrl() }}" type="{{ str_ends_with(strtolower($slide->video), '.webm') ? 'video/webm' : 'video/mp4' }}">
                 </video>
             @elseif ($slide->imageUrl())
-                <img src="{{ $slide->imageUrl() }}" alt="{{ $slide->localized('title') ?: __('site.school.full_name') }}"
+                <img src="{{ $slide->imageUrl() }}" alt="{{ $slide->localized('title') ?: Site::fullName() }}"
                      class="hero-kenburns absolute inset-0 size-full object-cover" x-bind:class="index === {{ $i }} && 'is-active'"
                      @if ($i === 0) fetchpriority="high" @else loading="lazy" @endif>
             @endif
@@ -66,10 +66,10 @@
             <div class="hero-rise pointer-events-auto max-w-2xl">
                 <span class="inline-flex items-center gap-2 rounded-full bg-white/10 px-3.5 py-1.5 text-sm font-semibold text-gold-200 ring-1 ring-white/25 backdrop-blur">
                     <span class="relative flex size-2"><span class="absolute inline-flex size-full animate-ping rounded-full bg-gold-400 opacity-75"></span><span class="relative inline-flex size-2 rounded-full bg-gold-400"></span></span>
-                    {{ __('site.hero.eyebrow') }}
+                    {{ Site::get('hero_eyebrow') }}
                 </span>
-                <h1 class="mt-5 text-[2.4rem] leading-[1.1] font-semibold text-balance text-white drop-shadow-sm sm:text-6xl bn:text-[2.2rem] bn:leading-[1.3] sm:bn:text-5xl">{{ __('site.hero.title') }}</h1>
-                <p class="mt-5 max-w-xl text-lg leading-8 text-white/85">{{ __('site.hero.text') }}</p>
+                <h1 class="mt-5 text-[2.4rem] leading-[1.1] font-semibold text-balance text-white drop-shadow-sm sm:text-6xl bn:text-[2.2rem] bn:leading-[1.3] sm:bn:text-5xl">{{ Site::get('hero_title') }}</h1>
+                <p class="mt-5 max-w-xl text-lg leading-8 text-white/85">{{ Site::get('hero_text') }}</p>
                 <div class="mt-8 flex flex-wrap gap-3">
                     <a href="{{ route('admission.apply') }}" class="btn-gold !px-6 !py-3">{{ __('site.hero.primary') }} @include('partials.icon', ['name' => 'arrow-right', 'class' => 'size-4'])</a>
                     <a href="{{ route('about') }}" class="btn-ghost-light !px-6 !py-3 backdrop-blur">{{ __('site.hero.secondary') }}</a>
