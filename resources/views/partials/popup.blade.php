@@ -1,6 +1,6 @@
-{{-- Event popup (admin: Website → Popup). Shows once per visit. --}}
+{{-- Event popup (admin: Website → Popup). Shows every time the homepage opens. --}}
 @php($href = \App\Models\HeroSlide::href($popup->button_url))
-<div x-data="sitePopup(@js($popup->versionKey()))" x-show="open" x-cloak
+<div x-data="sitePopup" x-show="open" x-cloak
      x-on:keydown.escape.window="open && close()"
      class="fixed inset-0 z-[70] flex items-end justify-center p-3 sm:items-center sm:p-6" role="dialog" aria-modal="true" aria-labelledby="popup-title">
     <div x-show="open" x-transition.opacity.duration.300ms x-on:click="close()" class="absolute inset-0 bg-brand-950/60 backdrop-blur-sm"></div>
