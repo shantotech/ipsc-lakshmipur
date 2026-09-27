@@ -12,7 +12,7 @@ class Popup extends Model
 
     protected $fillable = [
         'title_en', 'title_bn', 'body_en', 'body_bn', 'image',
-        'button_label_en', 'button_label_bn', 'button_url', 'starts_at', 'ends_at', 'is_active',
+        'button_label_en', 'button_label_bn', 'button_url', 'starts_at', 'ends_at', 'repeat_after_hours', 'is_active',
     ];
 
     protected function casts(): array
@@ -21,6 +21,7 @@ class Popup extends Model
             'starts_at' => 'datetime',
             'ends_at' => 'datetime',
             'is_active' => 'boolean',
+            'repeat_after_hours' => 'integer',
         ];
     }
 
