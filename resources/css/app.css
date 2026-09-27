@@ -200,6 +200,10 @@
 
 /* Homepage slider: slow zoom on photos, text rising in, progress bars. */
 @layer components {
+    .hero-text-shadow {
+        text-shadow: 0 2px 18px rgb(0 0 0 / 0.35);
+    }
+
     .hero-kenburns {
         transform: scale(1);
         transition: transform 8s ease-out;

@@ -20,12 +20,12 @@ class HeroSlide extends Model
     protected $fillable = [
         'media_type', 'image', 'image_mobile', 'video',
         'eyebrow_en', 'eyebrow_bn', 'title_en', 'title_bn', 'text_en', 'text_bn',
-        'button_label_en', 'button_label_bn', 'button_url', 'duration_seconds', 'sort_order', 'is_active',
+        'button_label_en', 'button_label_bn', 'button_url', 'show_text', 'duration_seconds', 'sort_order', 'is_active',
     ];
 
     protected function casts(): array
     {
-        return ['is_active' => 'boolean', 'duration_seconds' => 'integer', 'sort_order' => 'integer'];
+        return ['is_active' => 'boolean', 'show_text' => 'boolean', 'duration_seconds' => 'integer', 'sort_order' => 'integer'];
     }
 
     protected static function booted(): void
@@ -101,6 +101,16 @@ class HeroSlide extends Model
             ->where(fn ($q) => $q->where(fn ($q) => $q->where('media_type', 'image')->whereNotNull('image'))
                 ->orWhere(fn ($q) => $q->where('media_type', 'video')->whereNotNull('video')))
             ->orderBy('sort_order')->orderBy('id');
+    }
+
+    /** 'banner' = image only, 'own' = this slide's title, 'main' = the main homepage text. */
+    public function textMode(): string
+    {
+        if (! $this->show_text) {
+            return 'banner';
+        }
+
+        return filled($this->localized('title')) ? 'own' : 'main';
     }
 
     public function isVideo(): bool

@@ -18,7 +18,7 @@ class HeroSlidesTable
         return $table
             ->reorderable('sort_order')
             ->defaultSort('sort_order')
-            ->description('Slides play in this order (#). Drag the handle to reorder, or set Position and Show for (seconds) when editing a slide. The main homepage text stays on top of every slide unless a slide has its own title. With no slides, the homepage shows the standard welcome section.')
+            ->description('Slides play in this order (#). Drag the handle to reorder, or set Position and Show for (seconds) when editing a slide. The main homepage text shows on every slide unless the slide has its own title or its headline is turned off (for posters with their own text). With no slides, the homepage shows the standard welcome section.')
             ->columns([
                 TextColumn::make('sort_order')
                     ->label('#')
@@ -34,6 +34,7 @@ class HeroSlidesTable
                 TextColumn::make('title_en')
                     ->label('Title')
                     ->placeholder('Main homepage text')
+                    ->state(fn (HeroSlide $record) => $record->show_text ? $record->title_en : 'Banner only (no headline)')
                     ->description(fn (HeroSlide $record) => $record->title_bn)
                     ->wrap(),
                 TextColumn::make('media_type')
