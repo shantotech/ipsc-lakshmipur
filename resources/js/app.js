@@ -111,16 +111,11 @@ Alpine.data('heroSlider', (count) => ({
     },
 }));
 
-// Event popup on the homepage. Shows once per visit (browser session) and
-// again after it is edited. Closes with the button, Esc or a click outside.
-Alpine.data('sitePopup', (key) => ({
+// Event popup on the homepage. Opens every time the homepage loads;
+// closes with the button, Esc or a click outside.
+Alpine.data('sitePopup', () => ({
     open: false,
     init() {
-        let seen = null;
-        try {
-            seen = sessionStorage.getItem(key);
-        } catch (e) {}
-        if (seen) return;
         setTimeout(() => {
             this.open = true;
             document.body.classList.add('overflow-hidden');
@@ -130,9 +125,6 @@ Alpine.data('sitePopup', (key) => ({
     close() {
         this.open = false;
         document.body.classList.remove('overflow-hidden');
-        try {
-            sessionStorage.setItem(key, '1');
-        } catch (e) {}
     },
 }));
 
