@@ -126,8 +126,9 @@
             </div>
         </div>
 
-        {{-- Mobile menu --}}
-        <div x-show="mobile" x-cloak class="fixed inset-0 z-50 xl:hidden" role="dialog" aria-modal="true">
+        {{-- Mobile menu. Moved to <body> because the header's blur would otherwise shrink it to the header's height. --}}
+        <template x-teleport="body">
+        <div x-show="mobile" x-cloak class="fixed inset-0 z-[60] xl:hidden" role="dialog" aria-modal="true">
             <div x-show="mobile" x-transition.opacity x-on:click="mobile = false" class="absolute inset-0 bg-brand-950/50"></div>
             <div x-show="mobile" x-transition:enter="transition duration-200" x-transition:enter-start="translate-x-full" x-transition:leave="transition duration-150" x-transition:leave-end="translate-x-full"
                  class="absolute inset-y-0 right-0 flex w-full max-w-sm flex-col bg-paper shadow-2xl" x-on:keydown.escape.window="mobile = false">
@@ -167,6 +168,7 @@
                 </div>
             </div>
         </div>
+        </template>
     </header>
 
     <main id="main" class="flex-1">
