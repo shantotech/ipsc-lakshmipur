@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\HeroSlides\Schemas;
 
+use App\Models\HeroSlide;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
@@ -58,6 +59,20 @@ class HeroSlideForm
                     ->columnSpan(1)
                     ->schema([
                         Toggle::make('is_active')->label('Show on website')->default(true),
+                        TextInput::make('sort_order')
+                            ->label('Position')
+                            ->numeric()
+                            ->minValue(1)
+                            ->placeholder('Last')
+                            ->helperText('1 = first slide, 2 = second … Leave empty to add at the end. The other slides move to make room.'),
+                        TextInput::make('duration_seconds')
+                            ->label('Show for')
+                            ->numeric()
+                            ->minValue(2)
+                            ->maxValue(120)
+                            ->suffix('seconds')
+                            ->placeholder(fn (Get $get) => $get('media_type') === 'video' ? (string) HeroSlide::DEFAULT_VIDEO_SECONDS : (string) HeroSlide::DEFAULT_PHOTO_SECONDS)
+                            ->helperText(fn (Get $get) => 'How long this slide stays before the next one. Empty = '.($get('media_type') === 'video' ? HeroSlide::DEFAULT_VIDEO_SECONDS : HeroSlide::DEFAULT_PHOTO_SECONDS).' seconds.'),
                         TextInput::make('button_url')
                             ->label('Button link')
                             ->placeholder('admission/apply')

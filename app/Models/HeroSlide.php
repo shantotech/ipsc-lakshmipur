@@ -11,15 +11,21 @@ class HeroSlide extends Model
 {
     use Localized;
 
+    public const DEFAULT_PHOTO_SECONDS = 7;
+
+    public const DEFAULT_VIDEO_SECONDS = 12;
+
+    private static bool $renumbering = false;
+
     protected $fillable = [
         'media_type', 'image', 'video',
         'eyebrow_en', 'eyebrow_bn', 'title_en', 'title_bn', 'text_en', 'text_bn',
-        'button_label_en', 'button_label_bn', 'button_url', 'sort_order', 'is_active',
+        'button_label_en', 'button_label_bn', 'button_url', 'duration_seconds', 'sort_order', 'is_active',
     ];
 
     protected function casts(): array
     {
-        return ['is_active' => 'boolean'];
+        return ['is_active' => 'boolean', 'duration_seconds' => 'integer', 'sort_order' => 'integer'];
     }
 
     protected static function booted(): void
@@ -31,9 +37,52 @@ class HeroSlide extends Model
             }
         });
 
+        // Keep positions tidy (1, 2, 3 ...). A slide moved to position 2
+        // takes that place and the others shift down.
+        static::saved(function (HeroSlide $slide) {
+            if (! self::$renumbering && ($slide->wasRecentlyCreated || $slide->wasChanged('sort_order'))) {
+                static::renumber($slide);
+            }
+        });
+
         static::deleted(function (HeroSlide $slide) {
             Storage::disk('public')->delete(array_filter([$slide->image, $slide->video]));
+            static::renumber();
         });
+    }
+
+    public static function renumber(?HeroSlide $moved = null): void
+    {
+        self::$renumbering = true;
+
+        try {
+            $others = static::query()
+                ->when($moved, fn ($q) => $q->whereKeyNot($moved->getKey()))
+                ->orderBy('sort_order')->orderBy('id')
+                ->get();
+
+            if ($moved) {
+                $index = max(0, min($others->count(), (int) $moved->sort_order - 1));
+                $others->splice($index, 0, [$moved]);
+            }
+
+            $others->values()->each(function (HeroSlide $slide, int $i) {
+                if ($slide->sort_order !== $i + 1) {
+                    $slide->sort_order = $i + 1;
+                    $slide->saveQuietly();
+                }
+            });
+        } finally {
+            self::$renumbering = false;
+        }
+    }
+
+    /** How long this slide stays on screen, in milliseconds. */
+    public function durationMs(): int
+    {
+        $seconds = $this->duration_seconds ?: ($this->isVideo() ? self::DEFAULT_VIDEO_SECONDS : self::DEFAULT_PHOTO_SECONDS);
+
+        return max(2, min(120, $seconds)) * 1000;
     }
 
     public function scopeActive(Builder $query): Builder

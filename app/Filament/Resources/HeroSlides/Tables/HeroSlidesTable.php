@@ -18,8 +18,13 @@ class HeroSlidesTable
         return $table
             ->reorderable('sort_order')
             ->defaultSort('sort_order')
-            ->description('Slides play in this order; drag to reorder. The main homepage text stays on top of every slide unless a slide has its own title. With no slides, the homepage shows the standard welcome section.')
+            ->description('Slides play in this order (#). Drag the handle to reorder, or set Position and Show for (seconds) when editing a slide. The main homepage text stays on top of every slide unless a slide has its own title. With no slides, the homepage shows the standard welcome section.')
             ->columns([
+                TextColumn::make('sort_order')
+                    ->label('#')
+                    ->badge()
+                    ->color('gray')
+                    ->width('1%'),
                 ImageColumn::make('image')
                     ->label('')
                     ->disk('public')
@@ -37,8 +42,12 @@ class HeroSlidesTable
                     ->formatStateUsing(fn (string $state) => $state === 'video' ? 'Video' : 'Photo')
                     ->icon(fn (string $state) => $state === 'video' ? Heroicon::OutlinedFilm : Heroicon::OutlinedPhoto)
                     ->color(fn (string $state) => $state === 'video' ? 'info' : 'gray'),
+                TextColumn::make('duration_seconds')
+                    ->label('Shows for')
+                    ->state(fn (HeroSlide $record) => ($record->durationMs() / 1000).' sec'),
                 ToggleColumn::make('is_active')->label('On website'),
             ])
+            ->reorderRecordsTriggerAction(fn ($action, bool $isReordering) => $action->label($isReordering ? 'Done reordering' : 'Reorder slides'))
             ->recordActions([
                 EditAction::make(),
                 DeleteAction::make(),
