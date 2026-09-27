@@ -64,13 +64,17 @@ class HeroSlideForm
                             ->imageResizeTargetHeight('1920')
                             ->imageResizeUpscale(false)
                             ->maxSize(15360)
-                            ->helperText('Portrait photo shown on phones, e.g. 1080×1920 (9:16) or 1080×1350 (4:5). The headline sits over the middle of the photo, so keep faces and the building near the top or bottom. If empty, phones show the computer photo.')
+                            ->helperText('Portrait photo shown on phones, e.g. 1080×1920 (9:16) or 1080×1350 (4:5). When the headline is on, it covers the middle of the photo, so keep faces and the building near the top or bottom. If empty, phones show the computer photo.')
                             ->visible(fn (Get $get) => $get('media_type') !== 'video'),
                     ]),
                 Section::make('Settings')
                     ->columnSpan(1)
                     ->schema([
                         Toggle::make('is_active')->label('Show on website')->default(true),
+                        Toggle::make('show_text')
+                            ->label('Show headline on this slide')
+                            ->default(true)
+                            ->helperText('Turn off for posters and banners that already contain their own text. The banner is then shown in full (not cropped) with only its button, if set.'),
                         TextInput::make('sort_order')
                             ->label('Position')
                             ->numeric()
