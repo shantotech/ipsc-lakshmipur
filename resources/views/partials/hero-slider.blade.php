@@ -4,11 +4,10 @@
       - 'main'   the main homepage text (Settings → Homepage),
       - 'own'    the slide's own title,
       - 'banner' no headline, for posters that already contain text; shown in full, uncropped.
-    Text sits on a frosted dark panel so it stays readable on any background.
+    A dark overlay over the photo/video keeps the text readable on any background.
 --}}
 @php
     $modes = $slides->map(fn ($s) => $s->textMode())->values();
-    $panel = 'rounded-3xl bg-brand-950/60 p-6 shadow-2xl shadow-black/30 ring-1 ring-white/10 backdrop-blur-md sm:p-8';
 @endphp
 <section x-data="heroSlider({{ $slides->count() }})" class="relative isolate h-[clamp(520px,82vh,820px)] overflow-hidden bg-brand-950 text-white"
          aria-roledescription="carousel" aria-label="{{ __('Highlights') }}">
@@ -51,25 +50,26 @@
                 </picture>
             @endif
 
-            {{-- Shade: strong behind the text; banners only get a strip under the controls --}}
+            {{-- Dark overlay over the whole photo/video, darkest behind the text. Banners only get a strip under the controls. --}}
             @if ($mode !== 'banner')
-                <div class="absolute inset-0 bg-brand-950/55 sm:bg-transparent sm:bg-gradient-to-r sm:from-brand-950/90 sm:via-brand-950/60 sm:to-brand-950/10"></div>
+                <div class="absolute inset-0 bg-brand-950/65 sm:bg-brand-950/45"></div>
+                <div class="absolute inset-0 hidden bg-gradient-to-r from-brand-950/75 via-brand-950/40 to-transparent sm:block"></div>
             @endif
             <div class="absolute inset-x-0 bottom-0 {{ $mode === 'banner' ? 'h-32' : 'h-44' }} bg-gradient-to-t from-brand-950/85 to-transparent"></div>
 
             {{-- This slide's own title --}}
             @if ($mode === 'own')
                 <div class="container-site relative flex h-full items-center pt-6 pb-32 sm:pb-32">
-                    <div class="max-w-2xl {{ $panel }}" x-bind:class="index === {{ $i }} ? 'hero-rise' : ''">
+                    <div class="max-w-2xl" x-bind:class="index === {{ $i }} ? 'hero-rise' : ''">
                         @if ($slide->localized('eyebrow'))
-                            <span class="inline-flex items-center gap-2 rounded-full bg-white/10 px-3.5 py-1.5 text-sm font-semibold text-gold-200 ring-1 ring-white/20">
+                            <span class="inline-flex items-center gap-2 rounded-full bg-white/10 px-3.5 py-1.5 text-sm font-semibold text-gold-200 ring-1 ring-white/25 backdrop-blur">
                                 <span class="size-1.5 rounded-full bg-gold-400"></span>
                                 {{ $slide->localized('eyebrow') }}
                             </span>
                         @endif
                         <h2 class="hero-text-shadow mt-4 text-[2.1rem] leading-[1.12] font-semibold text-balance text-white sm:text-5xl xl:text-[3.4rem] bn:text-[2rem] bn:leading-[1.3] sm:bn:text-5xl">{!! nl2br(e($slide->localized('title'))) !!}</h2>
                         @if ($slide->localized('text'))
-                            <p class="mt-4 max-w-xl text-base leading-7 text-white/90 sm:text-lg sm:leading-8">{{ $slide->localized('text') }}</p>
+                            <p class="hero-text-shadow mt-4 max-w-xl text-base leading-7 text-white/90 sm:text-lg sm:leading-8">{{ $slide->localized('text') }}</p>
                         @endif
                         @if ($slide->buttonHref() && $slide->localized('button_label'))
                             <a href="{{ $slide->buttonHref() }}" class="btn-gold mt-7 !px-6 !py-3" x-bind:tabindex="index === {{ $i }} ? 0 : -1">
@@ -95,16 +95,16 @@
     <div class="pointer-events-none absolute inset-0 z-10" x-show="@js($modes)[index] === 'main'" x-transition.opacity.duration.500ms
          @if ($modes->first() !== 'main') x-cloak @endif>
         <div class="container-site flex h-full items-center pt-6 pb-32 sm:pb-32">
-            <div class="hero-rise pointer-events-auto max-w-2xl {{ $panel }}">
-                <span class="inline-flex items-center gap-2 rounded-full bg-white/10 px-3.5 py-1.5 text-sm font-semibold text-gold-200 ring-1 ring-white/20">
+            <div class="hero-rise pointer-events-auto max-w-2xl">
+                <span class="inline-flex items-center gap-2 rounded-full bg-white/10 px-3.5 py-1.5 text-sm font-semibold text-gold-200 ring-1 ring-white/25 backdrop-blur">
                     <span class="relative flex size-2"><span class="absolute inline-flex size-full animate-ping rounded-full bg-gold-400 opacity-75"></span><span class="relative inline-flex size-2 rounded-full bg-gold-400"></span></span>
                     {{ Site::get('hero_eyebrow') }}
                 </span>
                 <h1 class="hero-text-shadow mt-4 text-[2.1rem] leading-[1.12] font-semibold text-balance text-white sm:text-5xl xl:text-[3.4rem] bn:text-[2rem] bn:leading-[1.3] sm:bn:text-5xl">{{ Site::get('hero_title') }}</h1>
-                <p class="mt-4 max-w-xl text-base leading-7 text-white/90 sm:text-lg sm:leading-8">{{ Site::get('hero_text') }}</p>
+                <p class="hero-text-shadow mt-4 max-w-xl text-base leading-7 text-white/90 sm:text-lg sm:leading-8">{{ Site::get('hero_text') }}</p>
                 <div class="mt-7 flex flex-wrap gap-3">
                     <a href="{{ route('admission.apply') }}" class="btn-gold !px-6 !py-3">{{ __('site.hero.primary') }} @include('partials.icon', ['name' => 'arrow-right', 'class' => 'size-4'])</a>
-                    <a href="{{ route('about') }}" class="btn-ghost-light !px-6 !py-3">{{ __('site.hero.secondary') }}</a>
+                    <a href="{{ route('about') }}" class="btn-ghost-light !px-6 !py-3 backdrop-blur">{{ __('site.hero.secondary') }}</a>
                 </div>
             </div>
         </div>
