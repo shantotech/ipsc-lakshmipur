@@ -43,7 +43,7 @@ class HeroSlideForm
                             ->visible(fn (Get $get) => $get('media_type') === 'video')
                             ->required(fn (Get $get) => $get('media_type') === 'video'),
                         FileUpload::make('image')
-                            ->label(fn (Get $get) => $get('media_type') === 'video' ? 'Cover photo (shown while the video loads)' : 'Photo')
+                            ->label(fn (Get $get) => $get('media_type') === 'video' ? 'Cover photo (shown while the video loads)' : 'Computer photo (wide)')
                             ->image()
                             ->disk('public')
                             ->directory('hero')
@@ -52,8 +52,20 @@ class HeroSlideForm
                             ->imageResizeTargetHeight('1080')
                             ->imageResizeUpscale(false)
                             ->maxSize(15360)
-                            ->helperText('Wide photos work best (landscape). Resized to 1920×1080 automatically.')
+                            ->helperText('Landscape photo for computers and tablets. Resized to 1920×1080 automatically.')
                             ->required(fn (Get $get) => $get('media_type') !== 'video'),
+                        FileUpload::make('image_mobile')
+                            ->label('Mobile photo (tall) — optional')
+                            ->image()
+                            ->disk('public')
+                            ->directory('hero')
+                            ->imageResizeMode('contain')
+                            ->imageResizeTargetWidth('1080')
+                            ->imageResizeTargetHeight('1920')
+                            ->imageResizeUpscale(false)
+                            ->maxSize(15360)
+                            ->helperText('Portrait photo shown on phones, e.g. 1080×1920 (9:16) or 1080×1350 (4:5). The headline sits over the middle of the photo, so keep faces and the building near the top or bottom. If empty, phones show the computer photo.')
+                            ->visible(fn (Get $get) => $get('media_type') !== 'video'),
                     ]),
                 Section::make('Settings')
                     ->columnSpan(1)

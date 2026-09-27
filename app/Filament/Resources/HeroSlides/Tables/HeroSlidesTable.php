@@ -42,6 +42,11 @@ class HeroSlidesTable
                     ->formatStateUsing(fn (string $state) => $state === 'video' ? 'Video' : 'Photo')
                     ->icon(fn (string $state) => $state === 'video' ? Heroicon::OutlinedFilm : Heroicon::OutlinedPhoto)
                     ->color(fn (string $state) => $state === 'video' ? 'info' : 'gray'),
+                TextColumn::make('image_mobile')
+                    ->label('Mobile photo')
+                    ->state(fn (HeroSlide $record) => $record->isVideo() ? '—' : ($record->image_mobile ? 'Yes' : 'Uses computer photo'))
+                    ->color(fn (HeroSlide $record) => $record->image_mobile ? 'success' : 'gray')
+                    ->icon(fn (HeroSlide $record) => $record->image_mobile ? Heroicon::OutlinedDevicePhoneMobile : null),
                 TextColumn::make('duration_seconds')
                     ->label('Shows for')
                     ->state(fn (HeroSlide $record) => ($record->durationMs() / 1000).' sec'),

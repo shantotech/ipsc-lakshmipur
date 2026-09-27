@@ -24,13 +24,18 @@
                     <source src="{{ $slide->videoUrl() }}" type="{{ str_ends_with(strtolower($slide->video), '.webm') ? 'video/webm' : 'video/mp4' }}">
                 </video>
             @elseif ($slide->imageUrl())
-                <img src="{{ $slide->imageUrl() }}" alt="{{ $slide->localized('title') ?: Site::fullName() }}"
-                     class="hero-kenburns absolute inset-0 size-full object-cover" x-bind:class="index === {{ $i }} && 'is-active'"
-                     @if ($i === 0) fetchpriority="high" @else loading="lazy" @endif>
+                <picture>
+                    @if ($slide->mobileImageUrl())
+                        <source media="(max-width: 767px)" srcset="{{ $slide->mobileImageUrl() }}">
+                    @endif
+                    <img src="{{ $slide->imageUrl() }}" alt="{{ $slide->localized('title') ?: Site::fullName() }}"
+                         class="hero-kenburns absolute inset-0 size-full object-cover" x-bind:class="index === {{ $i }} && 'is-active'"
+                         @if ($i === 0) fetchpriority="high" @else loading="lazy" @endif>
+                </picture>
             @endif
 
             {{-- Shade so the text stays readable on any photo --}}
-            <div class="absolute inset-0 bg-gradient-to-r from-brand-950/85 via-brand-950/45 to-brand-950/0"></div>
+            <div class="absolute inset-0 bg-brand-950/50 sm:bg-transparent sm:bg-gradient-to-r sm:from-brand-950/85 sm:via-brand-950/45 sm:to-brand-950/0"></div>
             <div class="absolute inset-x-0 bottom-0 h-44 bg-gradient-to-t from-brand-950/75 to-transparent"></div>
 
             {{-- Text --}}
