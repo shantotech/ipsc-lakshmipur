@@ -9,7 +9,7 @@
          aria-roledescription="carousel" aria-label="{{ __('Highlights') }}">
 
     @foreach ($slides as $i => $slide)
-        <div data-slide data-duration="{{ $slide->isVideo() ? 12000 : 7000 }}"
+        <div data-slide data-duration="{{ $slide->durationMs() }}"
              class="absolute inset-0 transition-opacity duration-1000 ease-out"
              x-bind:class="index === {{ $i }} ? 'opacity-100 z-10' : 'opacity-0 z-0 pointer-events-none'"
              @if ($i > 0) x-cloak @endif
@@ -87,7 +87,7 @@
                             x-bind:class="index === {{ $i }} && '!w-14 sm:!w-20'" aria-label="{{ __('Go to slide') }} {{ $i + 1 }}" x-bind:aria-current="index === {{ $i }}">
                         <span class="absolute inset-y-0 left-0 rounded-full bg-gold-400"
                               x-bind:class="index === {{ $i }} ? (playing ? 'hero-progress' : 'w-full') : 'w-0'"
-                              style="--duration: {{ $slide->isVideo() ? 12000 : 7000 }}ms"></span>
+                              style="--duration: {{ $slide->durationMs() }}ms"></span>
                     </button>
                 @endforeach
                 <button type="button" x-on:click="toggle()" class="ml-2 grid size-9 place-items-center rounded-full bg-white/10 ring-1 ring-white/25 backdrop-blur transition hover:bg-white/20"
