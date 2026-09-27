@@ -17,7 +17,7 @@ class PopupsTable
     {
         return $table
             ->defaultSort('updated_at', 'desc')
-            ->description('Only one popup shows at a time: the most recently edited one that is turned on and within its dates. It appears on the homepage once per visit, and again when the visitor returns after the hours you set.')
+            ->description('Only one popup shows at a time: the most recently edited one that is turned on and within its dates. It appears on the homepage every time someone arrives at the site, but not while they browse between pages.')
             ->columns([
                 ImageColumn::make('image')->label('')->disk('public')->imageWidth(90)->imageHeight(56)->extraImgAttributes(['class' => 'rounded-md object-cover']),
                 TextColumn::make('title_en')->label('Title')->description(fn (Popup $record) => $record->title_bn)->wrap()->searchable(),

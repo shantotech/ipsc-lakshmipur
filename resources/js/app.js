@@ -111,34 +111,25 @@ Alpine.data('heroSlider', (count) => ({
     },
 }));
 
-// Event popup on the homepage. Shows once when someone arrives, not again
-// while they browse the site, and again when they come back after
-// `hours` hours. Editing the popup (new `key`) shows it again right away.
-Alpine.data('sitePopup', (key, hours) => ({
+// Event popup on the homepage. Shows every time someone arrives at the site
+// (typed address, bookmark, or a link from another website), but not when
+// they are already browsing the site and click through to the homepage.
+Alpine.data('sitePopup', () => ({
     open: false,
     init() {
-        if (this.seenRecently()) return;
-        this.remember();
+        if (this.cameFromThisSite()) return;
         setTimeout(() => {
             this.open = true;
             document.body.classList.add('overflow-hidden');
             this.$nextTick(() => this.$refs.close?.focus());
         }, 1200);
     },
-    seenRecently() {
+    cameFromThisSite() {
         try {
-            if (sessionStorage.getItem(key)) return true; // same visit
-            const last = Number(localStorage.getItem(key) || 0);
-            return last > 0 && Date.now() - last < hours * 3600 * 1000;
+            return document.referrer !== '' && new URL(document.referrer).origin === window.location.origin;
         } catch (e) {
             return false;
         }
-    },
-    remember() {
-        try {
-            sessionStorage.setItem(key, '1');
-            localStorage.setItem(key, String(Date.now()));
-        } catch (e) {}
     },
     close() {
         this.open = false;
