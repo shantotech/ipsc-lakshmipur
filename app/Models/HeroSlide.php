@@ -18,7 +18,7 @@ class HeroSlide extends Model
     private static bool $renumbering = false;
 
     protected $fillable = [
-        'media_type', 'image', 'video',
+        'media_type', 'image', 'image_mobile', 'video',
         'eyebrow_en', 'eyebrow_bn', 'title_en', 'title_bn', 'text_en', 'text_bn',
         'button_label_en', 'button_label_bn', 'button_url', 'duration_seconds', 'sort_order', 'is_active',
     ];
@@ -37,6 +37,16 @@ class HeroSlide extends Model
             }
         });
 
+        // Delete old files when they are replaced or removed.
+        static::updated(function (HeroSlide $slide) {
+            foreach (['image', 'image_mobile', 'video'] as $field) {
+                $old = $slide->getOriginal($field);
+                if ($old && $slide->wasChanged($field)) {
+                    Storage::disk('public')->delete($old);
+                }
+            }
+        });
+
         // Keep positions tidy (1, 2, 3 ...). A slide moved to position 2
         // takes that place and the others shift down.
         static::saved(function (HeroSlide $slide) {
@@ -46,7 +56,7 @@ class HeroSlide extends Model
         });
 
         static::deleted(function (HeroSlide $slide) {
-            Storage::disk('public')->delete(array_filter([$slide->image, $slide->video]));
+            Storage::disk('public')->delete(array_filter([$slide->image, $slide->image_mobile, $slide->video]));
             static::renumber();
         });
     }
@@ -101,6 +111,12 @@ class HeroSlide extends Model
     public function imageUrl(): ?string
     {
         return $this->image ? Storage::disk('public')->url($this->image) : null;
+    }
+
+    /** Tall photo for phones (photo slides only). */
+    public function mobileImageUrl(): ?string
+    {
+        return ! $this->isVideo() && $this->image_mobile ? Storage::disk('public')->url($this->image_mobile) : null;
     }
 
     public function videoUrl(): ?string
