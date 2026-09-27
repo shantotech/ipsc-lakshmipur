@@ -43,6 +43,11 @@ class PopupForm
                         DateTimePicker::make('ends_at')->label('Stop showing')->native(false)->seconds(false)
                             ->timezone('Asia/Dhaka')->displayFormat('d M Y, h:i A')->helperText('Empty = until turned off.')
                             ->after('starts_at'),
+                        TextInput::make('repeat_after_hours')
+                            ->label('Show again after')
+                            ->numeric()->minValue(1)->maxValue(720)->default(6)->required()
+                            ->suffix('hours')
+                            ->helperText('A visitor sees the popup once when they arrive, not again while browsing. It shows again when they come back after this many hours (24 = once a day).'),
                         TextInput::make('button_url')->label('Button link')->placeholder('notices')
                             ->helperText('A page on this site (e.g. "notices", "admission/apply") or a full web address.')->maxLength(255),
                     ]),
